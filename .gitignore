@@ -1,0 +1,27 @@
+
+# Папки кэша и служебные файлы Gradle
+.gradle
+build/
+
+# Исключение для Gradle Wrapper
+!build/wrapper/gradle-wrapper.jar
+
+# Настройки IDE (IntelliJ IDEA)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Системные файлы macOS и Windows
+.DS_Store
+Thumbs.db
+
+# Лог-файлы
+*.log
+
+# Файлы отчетов
+/reports/
+/report/
+
+# Папка со скриншотами
+/screenshots/
