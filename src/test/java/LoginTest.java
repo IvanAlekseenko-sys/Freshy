@@ -2,7 +2,6 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(TestListener.class)
 public class LoginTest extends BaseTest {
 
     @Test
@@ -27,10 +26,18 @@ public class LoginTest extends BaseTest {
         driver.get(baseUrl + "/practice-test-login/");
 
         LoginPage loginPage = new LoginPage(driver);
-        // Используем неверный пароль
-        LoggedInPage loggedInPage = loginPage.login("student", "WrongPassword");
 
-        // Эта проверка упадет, так как мы не перейдем на следующую страницу
-        Assert.assertTrue(loggedInPage.isLogoutButtonPresent(), "Кнопка 'Log out' не должна была появиться!");
+        // Пытаемся залогиниться с неверным паролем.
+        // Нам не важен результат этого метода (объект LoggedInPage),
+        // так как мы знаем, что перехода на новую страницу не будет.
+        loginPage.login("student", "WrongPassword");
+
+        // ПРОВЕРКА №1: Убедимся, что сообщение об ошибке вообще появилось.
+        Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "Сообщение об ошибке не отображается после неудачного входа!");
+
+        // ПРОВЕРКА №2: Убедимся, что текст сообщения корректный.
+        String expectedErrorMessage = "Your password is invalid!";
+        String actualErrorMessage = loginPage.getErrorMessageText();
+        Assert.assertEquals(actualErrorMessage, expectedErrorMessage, "Текст сообщения об ошибке не соответствует ожидаемому!");
     }
 }

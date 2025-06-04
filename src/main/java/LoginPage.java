@@ -20,6 +20,9 @@ public class LoginPage extends BasePage {
     @FindBy(id = "submit")
     WebElement submitButton;
 
+    @FindBy(id = "error")
+    private WebElement errorMessage;
+
     public void enterUsername(String username) {
         log.info("Вводим имя пользователя: '{}'", username);
         usernameField.sendKeys(username);
@@ -41,5 +44,16 @@ public class LoginPage extends BasePage {
         enterUsername(username);
         enterPassword(password);
         return clickSubmitButton();
+    }
+
+    public boolean isErrorMessageDisplayed() {
+        log.info("Проверяем видимость сообщения об ошибке");
+        return errorMessage.isDisplayed();
+    }
+
+    public String getErrorMessageText() {
+        String text = errorMessage.getText();
+        log.info("Получен текст сообщения об ошибке: '{}'", text);
+        return text;
     }
 }
