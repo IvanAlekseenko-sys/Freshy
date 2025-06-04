@@ -24,16 +24,19 @@ public class LoginPage extends BasePage {
     private WebElement errorMessage;
 
     public void enterUsername(String username) {
+        waitForVisibilityOf(usernameField);
         log.info("Вводим имя пользователя: '{}'", username);
         usernameField.sendKeys(username);
     }
 
     public void enterPassword(String password) {
+        waitForVisibilityOf(passwordField);
         log.info("Вводим пароль...");
         passwordField.sendKeys(password);
     }
 
     public LoggedInPage clickSubmitButton() {
+        waitForElementToBeClickable(submitButton);
         log.info("Нажимаем кнопку 'Submit'");
         submitButton.click();
         return new LoggedInPage(driver);

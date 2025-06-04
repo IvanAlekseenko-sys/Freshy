@@ -11,6 +11,7 @@ public class LoggedInPage extends BasePage {
     private WebElement logoutButton;
 
     boolean isLogoutButtonPresent() {
+        waitForVisibilityOf(logoutButton);
         return logoutButton.isDisplayed();
     }
 }
