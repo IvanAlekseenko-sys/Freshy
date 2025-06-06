@@ -35,18 +35,17 @@ public class LoginPage extends BasePage {
         passwordField.sendKeys(password);
     }
 
-    public LoggedInPage clickSubmitButton() {
+    public void clickSubmitButton() {
         waitForElementToBeClickable(submitButton);
         log.info("Нажимаем кнопку 'Submit'");
         submitButton.click();
-        return new LoggedInPage(driver);
     }
 
-    public LoggedInPage login(String username, String password) {
+    public void login(String username, String password) {
         log.info("Выполняем полный процесс логина для пользователя '{}'", username);
         enterUsername(username);
         enterPassword(password);
-        return clickSubmitButton();
+        clickSubmitButton();
     }
 
     public boolean isErrorMessageDisplayed() {

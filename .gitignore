@@ -3,6 +3,9 @@
 .gradle
 build/
 
+#Allure
+allure-results/
+
 # Исключение для Gradle Wrapper
 !build/wrapper/gradle-wrapper.jar
 
