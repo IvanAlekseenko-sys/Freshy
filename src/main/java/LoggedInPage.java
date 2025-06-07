@@ -10,7 +10,7 @@ public class LoggedInPage extends BasePage {
     @FindBy(xpath = "//a[text()='Log out']")
     private WebElement logoutButton;
 
-    boolean isLogoutButtonPresent() {
+    boolean isLogoutButtonDisplayed() {
         waitForVisibilityOf(logoutButton);
         return logoutButton.isDisplayed();
     }

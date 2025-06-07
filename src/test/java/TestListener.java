@@ -22,12 +22,9 @@ public class TestListener implements ITestListener {
 
         if (driver != null) {
             log.info("Делаем скриншот...");
-            // Получаем скриншот в виде массива байт
             byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-
-            // Используем прямой вызов Allure API для прикрепления скриншота
-            // "Screenshot on failure" - это название вложения в отчете
-            Allure.addAttachment("Screenshot on failure", new ByteArrayInputStream(screenshot));
+            // Добавляем тип контента и расширение файла для надежности
+            Allure.addAttachment("Screenshot on failure", "image/png", new ByteArrayInputStream(screenshot), ".png");
         } else {
             log.error("WebDriver был null, скриншот не сделан.");
         }
