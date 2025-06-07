@@ -11,6 +11,10 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
+    public WebElement getErrorElement() {
+        return errorMessage;
+    }
+
     @FindBy(id = "username")
     WebElement usernameField;
 
@@ -55,4 +59,6 @@ public class LoginPage extends BasePage {
         log.info("Получен текст сообщения об ошибке: '{}'", text);
         return text;
     }
+
+
 }

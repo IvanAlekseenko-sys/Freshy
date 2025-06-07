@@ -1,12 +1,14 @@
-import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import java.time.Duration;
 
 
 @Feature("Authentication")
@@ -39,28 +41,25 @@ public class LoginTest extends BaseTest {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login(username, password);
 
-        // --- БЛОК ТОТАЛЬНОЙ ОТЛАДКИ ---
-        try {
-            // "Грязная", но эффективная пауза для диагностики.
-            // Если с ней тест пройдет, значит проблема в сверхбыстрой перерисовке страницы.
-            log.info("Добавляем 1-секундную паузу для стабилизации DOM...");
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Прикрепляем исходный код страницы к отчету Allure СРАЗУ ПОСЛЕ КЛИКА
-        log.info("Прикрепляем исходный код страницы для анализа...");
-        Allure.addAttachment("Page Source After Submit", "text/html", driver.getPageSource(), ".html");
-        // ---------------------------------
+        // --- НОВОЕ УМНОЕ ОЖИДАНИЕ ---
+        // Ждем, пока либо изменится URL (успех), либо появится сообщение об ошибке (неудача)
+        log.info("Ожидаем обновления страницы после отправки формы...");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.or(
+                ExpectedConditions.urlContains("logged-in-successfully"),
+                ExpectedConditions.visibilityOf(loginPage.getErrorElement())
+        ));
+        log.info("Страница обновилась. Переходим к проверкам.");
+        // -----------------------------
 
         if (expectedResult.equals("Successful")) {
-            // ... логика для успешного сценария ...
             log.info("Проверяем сценарий успешного входа");
+            // Проверку на URL можно даже убрать, так как wait уже это сделал,
+            // но для наглядности оставим.
+            Assert.assertTrue(driver.getCurrentUrl().contains("logged-in-successfully"), "URL не соответствует странице успешного входа.");
             LoggedInPage loggedInPage = new LoggedInPage(driver);
             Assert.assertTrue(loggedInPage.isLogoutButtonDisplayed(), "Кнопка 'Log out' не отображается после успешного входа.");
         } else if (expectedResult.equals("Error")) {
-            // ... логика для негативного сценария ...
             log.info("Проверяем сценарий с ошибкой входа");
             Assert.assertTrue(loginPage.isErrorMessageDisplayed(), "Сообщение об ошибке не отображается после неудачного входа!");
         }
