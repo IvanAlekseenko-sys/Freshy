@@ -26,20 +26,17 @@ public class LoginPage extends BasePage {
     public void enterUsername(String username) {
         waitForElementToBeClickable(usernameField);
         log.info("Вводим имя пользователя: '{}'", username);
-        usernameField.sendKeys(username);
-    }
+        jsSendKeys(usernameField, username);    }
 
     public void enterPassword(String password) {
         waitForElementToBeClickable(passwordField);
         log.info("Вводим пароль...");
-        passwordField.sendKeys(password);
-    }
+        jsSendKeys(passwordField, password);    }
 
     public void clickSubmitButton() {
         waitForElementToBeClickable(submitButton);
         log.info("Нажимаем кнопку 'Submit'");
-        submitButton.click();
-    }
+        jsClick(submitButton);   }
 
     public void login(String username, String password) {
         log.info("Выполняем полный процесс логина для пользователя '{}'", username);
