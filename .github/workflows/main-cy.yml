@@ -1,58 +1,52 @@
-# Название нашего рабочего процесса. Оно будет отображаться на GitHub.
+# Название нашего рабочего процесса.
 name: Java CI with Gradle
 
 # Триггер: Указываем, когда запускать этот процесс.
 on:
-  # Запускать на каждый push в ветку 'main'.
   push:
     branches: [ "main" ]
-  # Также можно запускать на создание Pull Request'а в ветку 'main'.
   pull_request:
     branches: [ "main" ]
 
 # Задачи: Описываем работу, которую нужно выполнить.
 jobs:
-  # Мы создаем одну задачу и называем ее 'build'.
   build:
     # Указываем, на какой виртуальной машине ее выполнять.
-    # 'ubuntu-latest' — самый распространенный и быстрый вариант.
     runs-on: ubuntu-latest
 
     # Шаги: Последовательность команд, которые нужно выполнить.
     steps:
       # Шаг 1: Клонирование репозитория
-      # Используем готовое действие (action) от GitHub для скачивания нашего кода
-      # на виртуальную машину.
       - name: Checkout repository
         uses: actions/checkout@v4
 
       # Шаг 2: Настройка Java
-      # Используем еще одно готовое действие для установки нужной нам версии JDK.
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin' # Популярный и надежный дистрибутив OpenJDK
+          distribution: 'temurin'
 
-      # Шаг 3: Делаем gradlew исполняемым
-      # На Linux (ubuntu-latest) нужно дать файлу права на запуск.
+      # <-- НАШ НОВЫЙ ШАГ -->
+      # Шаг 3: Установка Google Chrome
+      # Используем готовое действие, которое само скачает и установит последнюю
+      # стабильную версию браузера на виртуальную машину.
+      - name: Install Google Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      # Шаг 4: Делаем gradlew исполняемым
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Шаг 4: Запуск тестов
-      # Это "сердце" нашего процесса. Выполняем ту же команду, что и локально.
-      # Добавляем --no-daemon, чтобы Gradle не пытался запустить фоновый процесс,
-      # что является хорошей практикой для CI-систем.
+      # Шаг 5: Запуск тестов
       - name: Run tests with Gradle
         run: ./gradlew clean test --no-daemon
 
-      # Шаг 5 (Бонус): Выгрузка Allure-отчета
-      # Этот шаг сработает, если тесты завершились (даже если упали),
-      # и сохранит сгенерированные Allure-результаты как артефакт сборки.
+      # Шаг 6 (Бонус): Выгрузка Allure-отчета
       - name: Upload Allure results
-        if: always() # Выполнять всегда, даже если предыдущий шаг (тесты) упал
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
           path: build/allure-results
-          retention-days: 7 # Хранить артефакты 7 дней
+          retention-days: 7
