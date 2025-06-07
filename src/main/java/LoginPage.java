@@ -24,13 +24,13 @@ public class LoginPage extends BasePage {
     private WebElement errorMessage;
 
     public void enterUsername(String username) {
-        waitForVisibilityOf(usernameField);
+        waitForElementToBeClickable(usernameField);
         log.info("Вводим имя пользователя: '{}'", username);
         usernameField.sendKeys(username);
     }
 
     public void enterPassword(String password) {
-        waitForVisibilityOf(passwordField);
+        waitForElementToBeClickable(passwordField);
         log.info("Вводим пароль...");
         passwordField.sendKeys(password);
     }
